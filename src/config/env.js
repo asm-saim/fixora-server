@@ -1,5 +1,4 @@
-const required = ["MONGODB_URI"];
-
+const required = ["MONGODB_URI", "AUTH_JWKS_URL", "AUTH_ISSUER"];
 export function checkEnv() {
   const missing = required.filter((key) => !process.env[key]);
   if (missing.length) {
