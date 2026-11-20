@@ -1,23 +1,25 @@
 import { Router } from "express";
 import { verifyToken } from "../middlewares/verifyToken.js";
 import { verifyTechnician } from "../middlewares/verifyRole.js";
-import { notImplemented } from "../controllers/notImplemented.js";
+import {
+  createService, deleteService, getService, listServices, myServices, setAvailability, updateService,
+} from "../controllers/services.controller.js";
 
 const router = Router();
 const technicianOnly = [verifyToken, verifyTechnician];
 
 // Public
-router.get("/", notImplemented("Step 6"));
+router.get("/", listServices);
 
-// IMPORTANT: "/mine" must be declared BEFORE "/:id", or Express treats "mine" as an id
-router.get("/mine", technicianOnly, notImplemented("Step 6"));
+// "/mine" MUST come before "/:id"
+router.get("/mine", technicianOnly, myServices);
 
-router.get("/:id", notImplemented("Step 6"));
+router.get("/:id", getService);
 
 // Technician only
-router.post("/", technicianOnly, notImplemented("Step 6"));
-router.patch("/:id", technicianOnly, notImplemented("Step 6"));
-router.patch("/:id/availability", technicianOnly, notImplemented("Step 6"));
-router.delete("/:id", technicianOnly, notImplemented("Step 6"));
+router.post("/", technicianOnly, createService);
+router.patch("/:id", technicianOnly, updateService);
+router.patch("/:id/availability", technicianOnly, setAvailability);
+router.delete("/:id", technicianOnly, deleteService);
 
 export default router;

@@ -6,6 +6,9 @@ const PHONE_RE = /^\+?[0-9][0-9\s-]{6,18}$/;
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 const DAY = 86_400_000;
 
+/** Stripe cannot charge a card less than $0.50, so a completed job must be at least that. */
+export const MIN_FINAL_AMOUNT = 0.5;
+
 const text = (v) => (typeof v === "string" ? v.trim() : "");
 
 /**
@@ -44,13 +47,17 @@ export function parseBookingInput(body = {}, now = new Date()) {
   return { serviceId, customerPhone, address, preferredDate, problemDescription };
 }
 
-/** finalAmount must be a number greater than 0 (strings like "45.50" are accepted). */
+/** finalAmount must be a number from $0.50 up (strings like "45.50" are accepted). */
 export function parseFinalAmount(value) {
   const amount = typeof value === "string" && value.trim() !== "" ? Number(value) : value;
-  const bad = () => new ApiError(400, "Final amount must be a number greater than 0");
 
-  if (typeof amount !== "number" || !Number.isFinite(amount) || amount > MAX_FINAL_AMOUNT) throw bad();
+  if (typeof amount !== "number" || !Number.isFinite(amount) || amount > MAX_FINAL_AMOUNT) {
+    throw new ApiError(400, "Final amount must be a number greater than 0");
+  }
   const rounded = Math.round(amount * 100) / 100;
-  if (rounded <= 0) throw bad();
+  if (rounded <= 0) throw new ApiError(400, "Final amount must be a number greater than 0");
+  if (rounded < MIN_FINAL_AMOUNT) {
+    throw new ApiError(400, "Final amount must be at least $0.50, the minimum for a card payment");
+  }
   return rounded;
 }

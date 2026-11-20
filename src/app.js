@@ -3,6 +3,7 @@ import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
 import routes from "./routes/index.js";
+import { stripeWebhook } from "./controllers/webhook.controller.js";
 import { ensureDb } from "./middlewares/ensureDb.js";
 import { notFound } from "./middlewares/notFound.js";
 import { errorHandler } from "./middlewares/errorHandler.js";
@@ -30,14 +31,15 @@ app.use(
   })
 );
 
-// Stripe webhook (Step 9) must be mounted HERE, before express.json(), using express.raw()
+// Stripe webhook: needs the RAW body to verify the signature, so it is mounted BEFORE express.json()
+app.post("/api/payments/webhook", express.raw({ type: "application/json" }), stripeWebhook);
 
 app.use(express.json({ limit: "1mb" }));
 
 // Root route: no DB needed, useful to check the deployment is alive
 app.get("/", (req, res) => res.json({ ok: true, name: "Fixora API", version: "1.0.0" }));
 
-// Every /api route waits for the DB connection first
+// Every other /api route waits for the DB connection first
 app.use("/api", ensureDb, routes);
 
 app.use(notFound);

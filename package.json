@@ -7,13 +7,16 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon src/index.js",
     "start": "node src/index.js",
-    "seed": "node scripts/seed.js"
+    "seed": "node scripts/seed.js",
+    "db:indexes": "node scripts/indexes.js",
+    "dev:approve-all": "node scripts/approve-all.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "module",
   "dependencies": {
+    "better-auth": "^1.7.26",
     "cors": "^2.8.6",
     "dotenv": "^18.0.10",
     "express": "^5.3.0",
@@ -21,6 +24,7 @@
     "jose": "^6.2.17",
     "mongodb": "^7.9.0",
     "morgan": "^1.12.1",
+    "multer": "^2.5.0",
     "stripe": "^23.1.0"
   },
   "devDependencies": {
