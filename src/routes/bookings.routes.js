@@ -1,19 +1,21 @@
 import { Router } from "express";
+import {
+  cancelBooking, createBooking, myBookings, technicianBookings, updateStatus,
+} from "../controllers/bookings.controller.js";
 import { verifyToken } from "../middlewares/verifyToken.js";
 import { verifyCustomer, verifyTechnician } from "../middlewares/verifyRole.js";
-import { notImplemented } from "../controllers/notImplemented.js";
 
 const router = Router();
 const customerOnly = [verifyToken, verifyCustomer];
 const technicianOnly = [verifyToken, verifyTechnician];
 
 // Customer
-router.post("/", customerOnly, notImplemented("Step 8"));
-router.get("/my", customerOnly, notImplemented("Step 8"));
-router.patch("/:id/cancel", customerOnly, notImplemented("Step 8"));
+router.post("/", customerOnly, createBooking);
+router.get("/my", customerOnly, myBookings);
+router.patch("/:id/cancel", customerOnly, cancelBooking);
 
 // Technician
-router.get("/technician", technicianOnly, notImplemented("Step 8"));
-router.patch("/:id/status", technicianOnly, notImplemented("Step 8"));
+router.get("/technician", technicianOnly, technicianBookings);
+router.patch("/:id/status", technicianOnly, updateStatus);
 
 export default router;
