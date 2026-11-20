@@ -66,4 +66,20 @@ export async function ensureIndexes(db) {
     db.collection("payments").createIndex({ bookingId: 1 }, { unique: true }),
     db.collection("payments").createIndex({ customerEmail: 1, paidAt: -1 }),
   ]);
+
+  // A customer can have only ONE active request per service. The database enforces it too, so a
+  // double-click can never create two. Partial indexes using $in need MongoDB 6.0+ (Atlas has it).
+  // Wrapped in try/catch so old duplicate data can never stop the server from starting.
+  try {
+    await db.collection("bookings").createIndex(
+      { customerEmail: 1, serviceId: 1 },
+      {
+        name: "one_active_booking_per_service",
+        unique: true,
+        partialFilterExpression: { status: { $in: ["requested", "accepted", "in-progress"] } },
+      }
+    );
+  } catch (err) {
+    console.warn("Could not create the one-active-booking index:", err.message);
+  }
 }
