@@ -3,7 +3,7 @@
 > Book verified technicians, track every repair step, and pay only after the job is done.
 
 - **Live URL:** _coming soon_
-- **Admin:** _email / password (added at submission)_
+- **Admin:** admin@fixora.com / Admin1234
 - **Related repo:** fixora-server / fixora-client
 
 ## Key Features
