@@ -65,66 +65,74 @@ const PEOPLE = [
 
 /* ---------------------------------------------------------------- services */
 
-// Several photos per category. The first one that really loads is used (checked at seed time),
-// and a local image is the last resort, so a service card can never show a broken picture.
-const PHOTO = (id) => `https://images.unsplash.com/photo-${id}?auto=format&fit=crop&w=1200&q=80`;
-const IMAGES = {
-  Smartphone: ["1511707171634-5f897ff02aa9", "1601784551446-20c9e07cdbdb", "1580910051074-3eb694886505", "1592899677977-9c10ca588bbd"],
-  "Laptop & PC": ["1496181133206-80ce9b88a853", "1517694712202-14dd9538aa97", "1588872657578-7efd1f1555ed", "1525547719571-a2d4ac8945e2"],
-  AC: ["1631545806609-6b6a9f0f2dbb", "1585338107529-13afc5f02586", "1621905251189-08b45d6a269e", "1581092160562-40aa08e78837"],
-  Refrigerator: ["1584568694244-14fbdf83bd30", "1571175443880-49e1d25b2bc5", "1536353284924-9220c464e262", "1581093458791-9f3c3900df4b"],
-  TV: ["1593359677879-a4bb92f829d1", "1461151304267-38535e780c79", "1593305841991-05c297ba4575", "1522869635100-9f4c5e86aa37"],
-  "Washing Machine": ["1626806787461-102c1bfaf6b1", "1582735689369-4fe89db7114c", "1517677208171-0bc6725a3e60", "1545173168-9f1947eebb7f"],
-  Electrical: ["1621905252507-b35492cc74b4", "1558618666-fcd25c85cd64", "1581092160562-40aa08e78837", "1581094794329-c8112a89af12"],
-};
+// Every service has its own local photo in fixora-client/public/images/services.
+// Local files are served instantly by Next's image optimizer, unlike remote URLs.
+const image = (name) => `/images/services/${name}.jpg`;
 const FALLBACK_IMAGE = "/images/hero-repair.jpg";
 
 // Index in this list = the "s" number used by the bookings below
 const SERVICES = [
   // Smartphone (Rahim)
   { tech: "t1", category: "Smartphone", title: "Smartphone Screen Replacement (All Major Brands)", basePrice: 55, estimatedDuration: "1-2 hours", serviceMode: "Shop Drop-off", serviceArea: "Dhanmondi, Dhaka",
+    image: image("smartphone-screen-replacement"),
     description: "Cracked or unresponsive screen? I replace displays for Samsung, iPhone, Xiaomi, Oppo and more using tested panels. Touch, brightness and face or fingerprint unlock are all checked before you leave, and the repair comes with a 30-day warranty." },
   { tech: "t1", category: "Smartphone", title: "Phone Battery & Charging Port Repair", basePrice: 28, estimatedDuration: "45-90 minutes", serviceMode: "Home Visit", serviceArea: "Dhanmondi, Mohammadpur, Lalmatia",
+    image: image("phone-battery-charging-repair"),
     description: "Battery draining fast, phone not charging, or the cable keeps falling out? I replace worn batteries and clean or swap damaged charging ports at your door, then run a full charge-and-discharge test so you know it is fixed." },
   // Laptop & PC (Nusrat)
   { tech: "t2", category: "Laptop & PC", title: "Laptop Not Booting: Diagnosis & Repair", basePrice: 40, estimatedDuration: "2-4 hours", serviceMode: "Home Visit", serviceArea: "Uttara, Dhaka",
+    image: image("laptop-not-booting-repair"),
     description: "Black screen, boot loops, beeping or no power at all. I find the real fault first (RAM, storage, charger circuit or motherboard), tell you the exact cost, and only then start the repair. Data is protected throughout." },
   { tech: "t2", category: "Laptop & PC", title: "Laptop Screen, Keyboard & SSD Upgrade", basePrice: 75, estimatedDuration: "Same day", serviceMode: "Shop Drop-off", serviceArea: "Uttara, Dhaka",
+    image: image("laptop-screen-keyboard-ssd-upgrade"),
     description: "Replace a broken screen or keyboard, or make an old laptop fast again with an SSD and extra RAM. I clone your existing system so all your files and programs are exactly where you left them." },
   // AC (Tanvir)
   { tech: "t3", category: "AC", title: "AC Gas Refill & Full Servicing", basePrice: 60, estimatedDuration: "2-3 hours", serviceMode: "Home Visit", serviceArea: "Gulshan, Banani, Baridhara",
+    image: image("ac-gas-refill-servicing"),
     description: "Weak cooling or water dripping indoors? A full service covers deep cleaning of filters and coils, leak check, gas pressure test and refill if needed. Your AC cools faster and uses less electricity afterwards." },
   { tech: "t3", category: "AC", title: "Split AC Installation & Repair", basePrice: 85, estimatedDuration: "3-5 hours", serviceMode: "Home Visit", serviceArea: "Gulshan, Banani, Badda",
+    image: image("split-ac-installation-repair"),
     description: "Professional installation of new split ACs with proper piping, drainage and a stable outdoor mount, plus repair for noisy fans, tripping breakers and remote or sensor faults. Clean finish, no mess left behind." },
   // Refrigerator (Tanvir)
   { tech: "t3", category: "Refrigerator", title: "Refrigerator Not Cooling: Complete Fix", basePrice: 50, estimatedDuration: "2-3 hours", serviceMode: "Home Visit", serviceArea: "Gulshan, Banani, Mohakhali",
+    image: image("refrigerator-not-cooling-fix"),
     description: "Fridge warm, freezer frosting over or food spoiling early? I test the thermostat, defrost system, door seals and fan, fix the cause on the spot and explain what went wrong so it does not happen again." },
   { tech: "t3", category: "Refrigerator", title: "Fridge Compressor & Thermostat Replacement", basePrice: 110, estimatedDuration: "Half a day", serviceMode: "Home Visit", serviceArea: "Gulshan, Banani, Uttara",
+    image: image("fridge-compressor-thermostat"),
     description: "For fridges that run constantly or do not start at all. Compressor, start relay and thermostat replacement with genuine parts, vacuum and gas charging, and a 90-day warranty on the replaced components." },
   // TV (Rahim)
   { tech: "t1", category: "TV", title: "LED / LCD TV Panel & Backlight Repair", basePrice: 65, estimatedDuration: "1-2 days", serviceMode: "Shop Drop-off", serviceArea: "Dhanmondi, Dhaka",
+    image: image("tv-panel-backlight-repair"),
     description: "Dark screen with sound, vertical lines, flickering or dim picture. I repair backlight strips and power boards for all major brands, and give you a clear quote before any parts are ordered." },
   { tech: "t1", category: "TV", title: "Smart TV Software & Mainboard Repair", basePrice: 45, estimatedDuration: "3-6 hours", serviceMode: "Home Visit", serviceArea: "Dhanmondi, Mohammadpur, Farmgate",
+    image: image("smart-tv-mainboard-repair"),
     description: "TV stuck on the logo, apps crashing, Wi-Fi dropping or no signal on HDMI. I reflash firmware, repair mainboards and fix port faults, then test every input and app before I leave." },
   // Washing Machine (Nusrat)
   { tech: "t2", category: "Washing Machine", title: "Washing Machine Drum & Motor Repair", basePrice: 70, estimatedDuration: "2-4 hours", serviceMode: "Home Visit", serviceArea: "Uttara, Tongi, Dhaka",
+    image: image("washing-machine-drum-motor"),
     description: "Loud banging, drum not spinning, or clothes coming out soaking wet. I replace bearings, belts and motors for top-load and front-load machines and balance the drum so it runs quietly again." },
   { tech: "t2", category: "Washing Machine", title: "Front-Load Washer Leak & Drain Fix", basePrice: 35, estimatedDuration: "1-2 hours", serviceMode: "Home Visit", serviceArea: "Uttara, Dhaka",
+    image: image("front-load-washer-leak-drain"),
     description: "Water on the floor or the machine will not drain? I clear blocked pumps and filters, replace door seals and hoses, and test a full wash cycle so you are sure the leak is gone." },
   // Electrical (Tanvir)
   { tech: "t3", category: "Electrical", title: "Home Electrical Wiring & Switchboard Repair", basePrice: 45, estimatedDuration: "2-4 hours", serviceMode: "Home Visit", serviceArea: "Gulshan, Banani, Baridhara",
+    image: image("home-electrical-wiring"),
     description: "Tripping breakers, burning smell, loose sockets or outdated switchboards. A licensed technician inspects your wiring, replaces damaged parts and leaves everything safe, labelled and to code." },
   { tech: "t3", category: "Electrical", title: "Ceiling Fan, Light & Short-Circuit Fix", basePrice: 22, estimatedDuration: "1-2 hours", serviceMode: "Home Visit", serviceArea: "Gulshan, Banani, Badda",
+    image: image("ceiling-fan-light-repair"),
     description: "Slow or wobbling fans, flickering lights, dead sockets and short circuits. Quick same-day visits with the common parts already on the van, so most jobs are finished in a single trip." },
 ];
 
 // Waiting for the admin, and one the admin turned down, so the approval page has something to show
 const EXTRA_SERVICES = [
-  { tech: "t2", category: "Laptop & PC", title: "Data Recovery from Dead Hard Drives", basePrice: 95, estimatedDuration: "2-3 days", serviceMode: "Shop Drop-off", serviceArea: "Uttara, Dhaka", approvalStatus: "pending", imageFrom: 0,
+  { tech: "t2", category: "Laptop & PC", title: "Data Recovery from Dead Hard Drives", basePrice: 95, estimatedDuration: "2-3 days", serviceMode: "Shop Drop-off", serviceArea: "Uttara, Dhaka", approvalStatus: "pending",
+    image: image("data-recovery-hard-drive"),
     description: "Lost files after a crash or a drive that no longer shows up? I recover documents, photos and databases from failed HDDs and SSDs, and you only pay for the files that are actually recovered." },
-  { tech: "t1", category: "Smartphone", title: "Water Damage Recovery for Phones", basePrice: 48, estimatedDuration: "1 day", serviceMode: "Shop Drop-off", serviceArea: "Dhanmondi, Dhaka", approvalStatus: "pending", imageFrom: 1,
+  { tech: "t1", category: "Smartphone", title: "Water Damage Recovery for Phones", basePrice: 48, estimatedDuration: "1 day", serviceMode: "Shop Drop-off", serviceArea: "Dhanmondi, Dhaka", approvalStatus: "pending",
+    image: image("phone-water-damage-recovery"),
     description: "Phone dropped in water? Switch it off and bring it straight in. Ultrasonic cleaning, corrosion treatment and a full board inspection give the best chance of saving your phone and your data." },
-  { tech: "t3", category: "Electrical", title: "Cheap Wiring Jobs, No Licence Needed", basePrice: 10, estimatedDuration: "1 hour", serviceMode: "Home Visit", serviceArea: "Dhaka", approvalStatus: "rejected", imageFrom: 2,
+  { tech: "t3", category: "Electrical", title: "Cheap Wiring Jobs, No Licence Needed", basePrice: 10, estimatedDuration: "1 hour", serviceMode: "Home Visit", serviceArea: "Dhaka", approvalStatus: "rejected",
+    image: image("cheap-wiring-jobs"),
     description: "Very low priced wiring work for any home. This listing was turned down by the admin because it does not describe the work or the qualifications clearly enough." },
 ];
 
@@ -210,26 +218,6 @@ async function signUp(person) {
   die(`Sign-up kept being rate limited for ${person.email}. Wait a minute and run the seed again.`);
 }
 
-async function imageWorks(url) {
-  try {
-    const res = await fetch(url, { method: "HEAD", signal: AbortSignal.timeout(6000) });
-    return res.ok;
-  } catch {
-    return false;
-  }
-}
-
-const imageCache = new Map();
-async function pickImage(category, offset) {
-  const ids = IMAGES[category];
-  for (let i = 0; i < ids.length; i++) {
-    const url = PHOTO(ids[(offset + i) % ids.length]);
-    if (!imageCache.has(url)) imageCache.set(url, await imageWorks(url));
-    if (imageCache.get(url)) return url;
-  }
-  return FALLBACK_IMAGE;
-}
-
 const midnightUtc = (date) => new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()));
 
 /** statusHistory for a booking, with believable gaps between the steps. */
@@ -291,12 +279,10 @@ const everyService = [
   ...SERVICES.map((s) => ({ ...s, approvalStatus: "approved" })),
   ...EXTRA_SERVICES,
 ];
-const perCategory = {};
 for (let i = 0; i < everyService.length; i++) {
   const s = everyService[i];
   const tech = byKey[s.tech];
-  perCategory[s.category] = (perCategory[s.category] ?? -1) + 1;
-  const image = await pickImage(s.category, s.imageFrom ?? perCategory[s.category]);
+  const image = s.image ?? FALLBACK_IMAGE;
   const createdAt = ago(175 - i * 9);
 
   serviceDocs.push({
@@ -319,9 +305,7 @@ for (let i = 0; i < everyService.length; i++) {
 }
 const inserted = await db.collection("services").insertMany(serviceDocs);
 const services = serviceDocs.map((doc, i) => ({ ...doc, _id: inserted.insertedIds[i] }));
-const fallbackCount = services.filter((s) => s.image === FALLBACK_IMAGE).length;
 console.log(`     ${services.length} services (${SERVICES.length} approved, ${EXTRA_SERVICES.length} waiting for review)`);
-if (fallbackCount) console.log(`     note: ${fallbackCount} service(s) use the local fallback image because their photos could not be loaded`);
 
 // 4. Bookings, payments and reviews
 console.log("4/4  Bookings, payments and reviews");
