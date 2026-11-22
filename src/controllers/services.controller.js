@@ -6,6 +6,7 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { assertOwner } from "../utils/ownership.js";
 import { parseServiceInput } from "../utils/parseServiceInput.js";
 import { toObjectId } from "../utils/objectId.js";
+import { latestReviews, ratingsForServices, withRating } from "../utils/ratings.js";
 
 // Tie-breakers (_id) keep pagination stable when prices or dates are equal
 const SORTS = {
@@ -46,7 +47,16 @@ export const listServices = asyncHandler(async (req, res) => {
     col.services.countDocuments(filter),
   ]);
 
-  res.json({ services, total, page, limit, totalPages: Math.max(1, Math.ceil(total / limit)) });
+  // Star ratings for every card on this page, in one query
+  const ratings = await ratingsForServices(services.map((s) => String(s._id)));
+
+  res.json({
+    services: services.map((s) => withRating(s, ratings)),
+    total,
+    page,
+    limit,
+    totalPages: Math.max(1, Math.ceil(total / limit)),
+  });
 });
 
 // GET /api/services/:id  (404 unless approved AND available)
@@ -66,9 +76,13 @@ export const getService = asyncHandler(async (req, res) => {
     { projection: { name: 1, image: 1, area: 1, bio: 1 } }
   );
 
+  const serviceId = String(service._id);
+  const [ratings, reviews] = await Promise.all([ratingsForServices([serviceId]), latestReviews(serviceId)]);
+
   const { technicianEmail, ...publicService } = service;
   res.json({
-    ...publicService,
+    ...withRating(publicService, ratings),
+    reviews,
     technician: {
       name: tech?.name || service.technicianName,
       image: tech?.image ?? null,

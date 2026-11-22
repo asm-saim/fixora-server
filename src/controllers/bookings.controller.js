@@ -5,6 +5,7 @@ import { ACTIVE_STATUSES, BOOKING_STATUSES, TRANSITIONS } from "../utils/booking
 import { toObjectId } from "../utils/objectId.js";
 import { assertOwner, customerScope, technicianScope } from "../utils/ownership.js";
 import { parseBookingInput, parseFinalAmount } from "../utils/parseBookingInput.js";
+import { parseReviewInput } from "../utils/parseReviewInput.js";
 
 const DUPLICATE_MESSAGE = "You already have an active request for this service";
 
@@ -104,6 +105,31 @@ export const cancelBooking = asyncHandler(async (req, res) => {
   if (!updated) throw new ApiError(409, "The technician just updated this request. Refresh to see its new status.");
 
   res.json(updated);
+});
+
+// POST /api/bookings/:id/review   { rating: 1-5, comment? }   (verifyToken, verifyCustomer)
+// One review per finished job. It is stored on the booking itself, so no extra collection is needed.
+export const addReview = asyncHandler(async (req, res) => {
+  const _id = toObjectId(req.params.id);
+  const review = parseReviewInput(req.body);
+
+  const booking = await col.bookings.findOne({ _id });
+  if (!booking) throw new ApiError(404, "Booking not found");
+  assertOwner(booking.customerEmail, req);
+
+  if (booking.status !== "completed") throw new ApiError(400, "You can review a repair only after it is completed");
+  if (booking.review) throw new ApiError(409, "You have already reviewed this repair");
+
+  const now = new Date();
+  // The filter repeats the rules, so a double-click can never save two reviews
+  const updated = await col.bookings.findOneAndUpdate(
+    { _id, customerEmail: req.user.email, status: "completed", review: { $exists: false } },
+    { $set: { review: { ...review, createdAt: now }, updatedAt: now } },
+    { returnDocument: "after", projection: { technicianEmail: 0 } }
+  );
+  if (!updated) throw new ApiError(409, "You have already reviewed this repair");
+
+  res.status(201).json(updated);
 });
 
 /* ---------- TECHNICIAN ---------- */

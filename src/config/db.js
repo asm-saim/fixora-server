@@ -82,4 +82,14 @@ export async function ensureIndexes(db) {
   } catch (err) {
     console.warn("Could not create the one-active-booking index:", err.message);
   }
+
+  // Service ratings: only bookings that have a review are indexed, so the index stays tiny
+  try {
+    await db.collection("bookings").createIndex(
+      { serviceId: 1, "review.createdAt": -1 },
+      { name: "reviews_by_service", partialFilterExpression: { "review.rating": { $exists: true } } }
+    );
+  } catch (err) {
+    console.warn("Could not create the reviews index:", err.message);
+  }
 }
