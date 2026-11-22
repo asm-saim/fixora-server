@@ -11,6 +11,8 @@ export async function connectDB() {
     const client = new MongoClient(process.env.MONGODB_URI, {
       serverApi: { version: ServerApiVersion.v1, strict: false, deprecationErrors: true },
       maxPoolSize: 10,
+      serverSelectionTimeoutMS: 8000, // fail fast instead of the 30s default
+      connectTimeoutMS: 8000,
     });
 
     cache.promise = client
