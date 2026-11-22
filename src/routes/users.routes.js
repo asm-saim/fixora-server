@@ -1,15 +1,11 @@
 import { Router } from "express";
 import { verifyToken } from "../middlewares/verifyToken.js";
-import { notImplemented } from "../controllers/notImplemented.js";
+import { getMe, updateProfile } from "../controllers/users.controller.js";
 
 const router = Router();
 
-// Any logged-in user. Returns the profile and role from the database.
-router.get("/me", verifyToken, (req, res) => {
-  const { id, email, name, image, role } = req.user;
-  res.json({ id, email, name, image, role });
-});
-
-router.patch("/profile", verifyToken, notImplemented("Step 11"));
+// Any logged-in user. The profile belongs to whoever the token says they are.
+router.get("/me", verifyToken, getMe);
+router.patch("/profile", verifyToken, updateProfile);
 
 export default router;
