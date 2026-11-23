@@ -1,10 +1,9 @@
-# Fixora API
+# Fixora - Backend API
 
-REST API for **Fixora**, a smart device and home appliance repair platform. Customers book verified technicians, track each repair step, and pay only after the job is completed.
+A RESTful backend API for **Fixora**, a smart device and home appliance repair platform. Customers can book verified technicians, track repair progress, and pay securely after service completion.
 
-- **Live API:** `https://<your-server>.vercel.app` (health check: `GET /`)
-- **Client repo:** `fixora-client`
-- **Live site:** `https://<your-client>.vercel.app`
+- **Client repo:** `https://github.com/asm-saim/fixora-client`
+- **Live site:** `https://fixora-v1.vercel.app/`
 
 ## Demo credentials
 
